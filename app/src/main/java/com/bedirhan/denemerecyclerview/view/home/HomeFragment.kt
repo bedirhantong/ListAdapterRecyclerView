@@ -16,6 +16,8 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
     private lateinit var viewModel: HomeViewModel
+
+
     private val recyclerAdapter : RecyclerAdapter by lazy {
         RecyclerAdapter()
     }
@@ -37,20 +39,15 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
-        viewModel.showUsers()
-
-
-
+        viewModel.getDataFromInternetDirectly()
         binding.recyclerViewHomeFragment.adapter = recyclerAdapter
         observeLiveData()
     }
     private fun observeLiveData(){
-        viewModel.userList.observe(viewLifecycleOwner){
-            recyclerAdapter.setData(it)
+        viewModel.productList.observe(viewLifecycleOwner){
+            recyclerAdapter.submitList(it)
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
