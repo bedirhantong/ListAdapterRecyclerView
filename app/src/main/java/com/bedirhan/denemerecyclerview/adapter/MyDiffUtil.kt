@@ -1,11 +1,11 @@
 package com.bedirhan.denemerecyclerview.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.bedirhan.denemerecyclerview.model.User
+import com.bedirhan.denemerecyclerview.model.Product
 
 class MyDiffUtil(
-    private val oldList: List<User>,
-    private val newList: List<User>,
+    private val oldList: List<Product>,
+    private val newList: List<Product>,
 ) :DiffUtil.Callback()
 {
     override fun getOldListSize(): Int {
@@ -17,15 +17,21 @@ class MyDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        return oldList[oldItemPosition].name == newList[newItemPosition].name
+        return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
        return when{
-           oldList[oldItemPosition].name != newList[newItemPosition].name ->{
+           oldList[oldItemPosition].id != newList[newItemPosition].id ->{
                false
            }
-           oldList[oldItemPosition].age != newList[newItemPosition].age ->{
+           oldList[oldItemPosition].title != newList[newItemPosition].title ->{
+               false
+           }
+           oldList[oldItemPosition].image != newList[newItemPosition].image ->{
+               false
+           }
+           oldList[oldItemPosition].category != newList[newItemPosition].category ->{
                false
            }
            else -> true

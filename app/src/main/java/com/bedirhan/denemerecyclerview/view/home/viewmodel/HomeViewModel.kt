@@ -4,30 +4,35 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.bedirhan.denemerecyclerview.model.User
+import androidx.lifecycle.viewModelScope
+import com.bedirhan.denemerecyclerview.model.Product
+import com.bedirhan.denemerecyclerview.service.ProductAPIService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
-    private val _userList = MutableLiveData<List<User>>()
-    val userList : LiveData<List<User>>
-        get() = _userList
+    private val _productList = MutableLiveData<List<Product>>()
+    val productList : LiveData<List<Product>>
+        get() = _productList
 
-    init {
-        Log.d("viewModel","you are in homeViewModel")
+    private val productApiService = ProductAPIService()
+
+
+    private fun getRemoteAlbums(){
+        viewModelScope.launch (Dispatchers.Main){
+            val albums = productApiService.getProductsFromRemote()
+            showAlbums(albums)
+        }
+
+
     }
 
-    fun showUsers(){
-        // remote data logic
-        _userList.value = arrayListOf(
-            User("Bedirhan",23),
-            User("Mehmet",23),
-            User("Ali",23),
-            User("Mesut",23),
-            User("Anıl",23),
-            User("Tuba",23),
-            User("Alara",23),
-            User("Ayşe",23),
-            User("Appcent",11)
-        )
+    fun getDataFromInternetDirectly(){
+        getRemoteAlbums()
+    }
+
+    private fun showAlbums(albums : List<Product>){
+        _productList.value = albums
     }
 
 }
