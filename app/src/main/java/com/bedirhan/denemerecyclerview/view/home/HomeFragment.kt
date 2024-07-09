@@ -40,17 +40,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
         viewModel.getDataFromInternetDirectly()
-
         binding.recyclerViewHomeFragment.adapter = recyclerAdapter
         observeLiveData()
     }
     private fun observeLiveData(){
         viewModel.productList.observe(viewLifecycleOwner){
-            recyclerAdapter.setData(it)
+            recyclerAdapter.submitList(it)
         }
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
