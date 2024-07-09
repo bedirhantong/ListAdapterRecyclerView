@@ -1,21 +1,29 @@
 package com.bedirhan.denemerecyclerview.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bedirhan.denemerecyclerview.model.User
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bedirhan.denemerecyclerview.R
 import com.bedirhan.denemerecyclerview.databinding.RecyclerRowBinding
+import com.bedirhan.denemerecyclerview.model.Product
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 
 class RecyclerAdapter:RecyclerView.Adapter<RecyclerAdapter.RecycleViewHolder>() {
-    private var userList:List<User> = arrayListOf()
+    private var productList:List<Product> = arrayListOf()
 
     inner class RecycleViewHolder(
         private val binding: RecyclerRowBinding
     ): RecyclerView.ViewHolder(binding.root){
-        fun bind(user: User){
-            binding.rowUsername.text = user.name
-            binding.rowUserAge.text = user.age.toString()
+        private val options = RequestOptions().placeholder(customizedPlaceHolder(itemView.context)).fitCenter().error(R.mipmap.ic_launcher)
+        fun bind(product: Product){
+            binding.rowProductTitle.text = product.title
+            binding.rowProductDescription.text = product.description
+            Glide.with(binding.rowImage.context).setDefaultRequestOptions(options).load(product.image).into(binding.rowImage)
+
         }
     }
 
@@ -26,21 +34,29 @@ class RecyclerAdapter:RecyclerView.Adapter<RecyclerAdapter.RecycleViewHolder>() 
         return RecycleViewHolder(binding)
     }
 
+    fun customizedPlaceHolder (context: Context): CircularProgressDrawable {
+        return  CircularProgressDrawable(context).apply {
+            strokeWidth = 8f
+            centerRadius = 40f
+            start()
+        }
+    }
+
     override fun getItemCount(): Int {
-        return userList.size
+        return productList.size
     }
 
     override fun onBindViewHolder(holder: RecycleViewHolder, position: Int) {
         holder.bind(
-            userList[position]
+            productList[position]
         )
     }
 
 
-    fun setData(newList: List<User>){
-        val diffUtil = MyDiffUtil(userList,newList)
+    fun setData(newList: List<Product>){
+        val diffUtil = MyDiffUtil(productList,newList)
         val diffResults = DiffUtil.calculateDiff(diffUtil)
-        userList = newList
+        productList = newList
         diffResults.dispatchUpdatesTo(this)
     }
 }
